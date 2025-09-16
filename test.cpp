@@ -3,6 +3,7 @@
 #include <map>
 #include <list>
 #include <ranges>
+#include <numeric>
 
 using namespace std;
 using namespace std::ranges;
@@ -20,15 +21,18 @@ int main() {
   //c++17: [key,value]
   //c++20: views |
 
-  for (auto vec : myMap | views::transform( [] (auto i) { auto [key,value] = i; return key * key; } )) {                          
+  auto op_sqr = [] (auto i) { return i * i; };
+  for (auto vec : myMap | views::keys | views::transform(op_sqr)) {
     cout << "Vec: " << vec << endl;
   }
 
-  for (auto [key, value] : myMap | views::filter( [] (auto i) { auto [key,value] = i; return key > 1; } )) {                          
-    cout << "Key: " << key << ", Value: " << value << endl;
+  auto is_gt1 = [] (auto i) { return i > 1; };
+  for (auto key : myMap | views::keys | views::filter(is_gt1)) {                          
+    cout << "Key: " << key << ", Value: " << myMap[key] << endl;
   }
 
-
+  auto op_sum = [] (auto acc, auto i) { auto [key,value] = i; return acc + key; };
+  cout << "Sum: " << reduce(myMap.begin(), myMap.end(), 0, op_sum) << endl;
 
   map<int,list<int>> myMap2;
   myMap2[1].push_back(6);
