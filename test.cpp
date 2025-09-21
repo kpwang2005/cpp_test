@@ -38,6 +38,7 @@ int main() {
   myMap2[1].push_back(6);
   myMap2[1].push_back(7);
   myMap2[1].push_back(8);
+  myMap2[1].push_back(9);
   myMap2[1].pop_front();                                
    
   cout << myMap2[1].front() << endl << myMap2[1].back() << endl;
