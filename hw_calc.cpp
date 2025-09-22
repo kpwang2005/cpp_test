@@ -5,6 +5,88 @@
 
 using namespace std;
 
+int eval_modify(list<string>& tokens) {
+    string n;
+    int result = 0;
+    int product;
+
+    // first term
+    n= tokens.front();
+    tokens.pop_front();
+    if (n == "(") {
+        product = eval_modify(tokens);
+    } else {
+        product = stoi(n);
+    }
+
+    // process rest
+
+    while (!tokens.empty() && tokens.front() != ")") {
+        n= tokens.front();
+        tokens.pop_front();
+        if (n == "+") {
+            result += product;
+            n= tokens.front();
+            tokens.pop_front();
+            if (n == "(") {
+                product = eval_modify(tokens);
+            } else {
+                product = stoi(n);
+            }
+        } else if (n == "*") {
+            n= tokens.front();
+            tokens.pop_front();
+            if (n == "(") {
+                product *= eval_modify(tokens);
+            } else {
+                product *= stoi(n);
+            }
+        }
+    }
+    if(!tokens.empty() && tokens.front() == ")") {  // different from eval(): >> vs pop_front()
+        tokens.pop_front();
+    }
+
+    result += product;
+    return result;
+}
+
+int eval(stringstream& sin) {
+    string n;
+    int result = 0;
+    int product;
+
+    // first term
+    sin >> n;
+    if (n == "(") {
+        product = eval(sin);
+    } else {
+        product = stoi(n);
+    }
+
+    // process rest
+    while (sin >> n && n != ")") {
+        if (n == "+") {
+            result += product;
+            sin >> n;
+            if (n == "(") {
+                product = eval(sin);
+            } else {
+                product = stoi(n);
+            }
+        } else if (n == "*") {
+            sin >> n;
+            if (n == "(") {
+                product *= eval(sin);
+            } else {
+                product *= stoi(n);
+            }
+        }
+    }
+
+    result += product;
+    return result;
+}
 
 int calc_expression(const vector<string>& tokens) {
     int tmp_val;
@@ -55,7 +137,7 @@ int calc_expression(const vector<string>& tokens) {
 
 int main() {
     
-    string sample = "(((3 + 4 ) + 2)) * 5 + 6 + 7 * 8";
+    string sample = "(3 + 4 ) * 5 + 6 + 7 * 8";
 
     // Tokenize the string
     istringstream iss(sample);
@@ -109,6 +191,15 @@ int main() {
 
     cout << "Result: " << calc_expression(tokens) << endl;
     cout << "Result: " << calc_expression(working_tokens) << endl;
+
+    // method 1: stringstream
+    std::stringstream sin;
+    for (const auto& t : tokens) sin << t << " ";
+    std::cout << "Andy: " << eval(sin) << endl;
+
+    // method 2: list<string>
+    list<string> list_tokens(tokens.begin(), tokens.end());
+    cout << "Andy:" << eval_modify(list_tokens) << endl;
 
     return 0;
 }
