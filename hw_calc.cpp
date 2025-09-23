@@ -29,16 +29,14 @@ int eval_modify(list<string>& tokens) {
     while (n != ")") {           // different from eval(): >> vs pop
         if (n == "+") {
             result += product;
-            n= tokens.front();
-            tokens.pop_front();
+            n= pop_front_value(tokens);
             if (n == "(") {
                 product = eval_modify(tokens);
             } else {
                 product = stoi(n);
             }
         } else if (n == "*") {
-            n= tokens.front();
-            tokens.pop_front();
+            n= pop_front_value(tokens);
             if (n == "(") {
                 product *= eval_modify(tokens);
             } else {
