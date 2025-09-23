@@ -5,7 +5,7 @@
 
 using namespace std;
 
-auto pop_front_value(list<string>& tokens) { 
+auto pop_front_value(auto& tokens) { 
         auto token = tokens.front(); 
         tokens.pop_front();
         return token;
@@ -26,6 +26,7 @@ int eval_modify(list<string>& tokens) {
 
     // process rest
     auto check_n = [&]() { 
+        if(tokens.empty()) return false;
         n= pop_front_value(tokens); 
         return n != ")"; 
     };
