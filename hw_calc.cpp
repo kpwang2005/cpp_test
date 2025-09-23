@@ -5,14 +5,19 @@
 
 using namespace std;
 
+auto pop_front_value(list<string>& tokens) { 
+        auto token = tokens.front(); 
+        tokens.pop_front();
+        return token;
+}
+
 int eval_modify(list<string>& tokens) {
     string n;
     int result = 0;
     int product;
 
     // first term
-    n= tokens.front();
-    tokens.pop_front();
+    n= pop_front_value(tokens);
     if (n == "(") {
         product = eval_modify(tokens);
     } else {
@@ -20,10 +25,8 @@ int eval_modify(list<string>& tokens) {
     }
 
     // process rest
-
-    while (!tokens.empty() && tokens.front() != ")") {
-        n= tokens.front();
-        tokens.pop_front();
+    n= pop_front_value(tokens);  // different from eval(): >> vs pop
+    while (n != ")") {           // different from eval(): >> vs pop
         if (n == "+") {
             result += product;
             n= tokens.front();
@@ -42,9 +45,7 @@ int eval_modify(list<string>& tokens) {
                 product *= stoi(n);
             }
         }
-    }
-    if(!tokens.empty() && tokens.front() == ")") {  // different from eval(): >> vs pop_front()
-        tokens.pop_front();
+        n= pop_front_value(tokens);  // different from eval(): >> vs pop
     }
 
     result += product;
