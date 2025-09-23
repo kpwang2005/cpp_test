@@ -25,8 +25,12 @@ int eval_modify(list<string>& tokens) {
     }
 
     // process rest
-    n= pop_front_value(tokens);  // different from eval(): >> vs pop
-    while (n != ")") {           // different from eval(): >> vs pop
+    auto check_n = [&]() { 
+        n= pop_front_value(tokens); 
+        return n != ")"; 
+    };
+   
+    while (check_n()) {          
         if (n == "+") {
             result += product;
             n= pop_front_value(tokens);
@@ -43,7 +47,6 @@ int eval_modify(list<string>& tokens) {
                 product *= stoi(n);
             }
         }
-        n= pop_front_value(tokens);  // different from eval(): >> vs pop
     }
 
     result += product;
